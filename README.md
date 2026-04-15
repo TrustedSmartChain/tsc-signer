@@ -43,34 +43,58 @@ Requires [`buf`](https://buf.build/docs/installation) on your `PATH`. Output lan
 
 Dates are passed through as strings — use whatever format the chain expects (typically RFC3339). Amounts are integer strings in base units of `DENOM`.
 
+Scripts are namespaced by module (`lockup:`, `bank:`, `staking:`, `licenses:`,
+`distro:`) so it's always clear which module a tx or query targets.
+
 ### Lock
 
 ```bash
-npm run lock -- 2026-12-31T00:00:00Z 1000000000000000000
+npm run lockup:lock -- 2026-12-31T00:00:00Z 1000000000000000000
 ```
 
 ### Send
 
 ```bash
-npm run send -- tsc1recipient... 1000000000000000000
+npm run bank:send -- tsc1recipient... 1000000000000000000
 ```
 
 ### Delegate
 
 ```bash
-npm run delegate -- tscvaloper1... 1000000000000000000
+npm run staking:delegate -- tscvaloper1... 1000000000000000000
 ```
 
 ### Unbond
 
 ```bash
-npm run unbond -- tscvaloper1... 1000000000000000000
+npm run staking:unbond -- tscvaloper1... 1000000000000000000
 ```
 
 ### Redelegate
 
 ```bash
-npm run redelegate -- tscvaloper1src... tscvaloper1dst... 1000000000000000000
+npm run staking:redelegate -- tscvaloper1src... tscvaloper1dst... 1000000000000000000
+```
+
+### Bank queries
+
+```bash
+npm run bank:query -- balance tsc1... aTSC
+npm run bank:query -- all-balances tsc1...
+npm run bank:query -- total-supply
+npm run bank:query -- supply-of aTSC
+```
+
+### Staking queries
+
+```bash
+npm run staking:query -- validator tscvaloper1...
+npm run staking:query -- validators BOND_STATUS_BONDED
+npm run staking:query -- delegation tsc1... tscvaloper1...
+npm run staking:query -- delegator-delegations tsc1...
+npm run staking:query -- unbonding-delegation tsc1... tscvaloper1...
+npm run staking:query -- delegator-unbonding-delegations tsc1...
+npm run staking:query -- params
 ```
 
 ## Licenses module
@@ -80,46 +104,83 @@ The signing account is used as `owner` / `issuer` / `revoker` / `updater` / `hol
 ### Create / update a license type
 
 ```bash
-npm run create-license-type -- my-license true 10000
-npm run update-license-type -- my-license false 20000
+npm run licenses:create-license-type -- tsc.node true 10000
+npm run licenses:update-license-type -- tsc.node false 20000
 ```
 
 ### Admin keys
 
 ```bash
-npm run set-admin-key -- tsc1admin... '[{"permission":"issue","licenseTypes":["my-license"]}]'
-npm run remove-admin-key -- tsc1admin...
+npm run licenses:set-admin-key -- tsc1admin... '[{"permission":"issue","licenseTypes":["tsc.node"]}]'
+npm run licenses:remove-admin-key -- tsc1admin...
 ```
 
 ### Issue / revoke / update / transfer
 
 ```bash
-npm run issue-license -- my-license tsc1holder... 2026-04-15T00:00:00Z 2027-04-15T00:00:00Z 1
+npm run licenses:issue-license -- tsc.node tsc1holder... 2026-04-15T00:00:00Z 2027-04-15T00:00:00Z 1
 # endDate is optional — omit for a license with no expiration:
-npm run issue-license -- my-license tsc1holder... 2026-04-15T00:00:00Z 1
-npm run revoke-license -- my-license tsc1holder... 1
-npm run update-license -- my-license <licenseId> active
-npm run transfer-license -- my-license <licenseId> tsc1recipient...
+npm run licenses:issue-license -- tsc.node tsc1holder... 2026-04-15T00:00:00Z 1
+npm run licenses:revoke-license -- tsc.node tsc1holder... 1
+npm run licenses:update-license -- tsc.node <licenseId> active
+npm run licenses:transfer-license -- tsc.node <licenseId> tsc1recipient...
 ```
 
 ### Batch issue
 
 ```bash
-npm run batch-issue-license -- my-license '[{"holder":"tsc1a...","startDate":"2026-04-15T00:00:00Z","endDate":"2027-04-15T00:00:00Z"}]'
+npm run licenses:batch-issue-license -- tsc.node '[{"holder":"tsc1a...","startDate":"2026-04-15T00:00:00Z","endDate":"2027-04-15T00:00:00Z"}]'
 ```
 
-## Distro module
+### Queries
+
+Read-only queries against the `licenses` module. They hit `RPC_URL` and do not
+require `MNEMONIC`. Pagination is an optional JSON string:
+`'{"offset":"0","limit":"100","countTotal":true,"reverse":false}'`.
 
 ```bash
-npm run mint -- 1000000000000000000
+npm run licenses:query -- params
+npm run licenses:query -- permissions
+npm run licenses:query -- license-type tsc.node
+npm run licenses:query -- license-types
+npm run licenses:query -- license tsc.node 1
+npm run licenses:query -- licenses-by-type tsc.node
+npm run licenses:query -- licenses-by-holder tsc1holder...
+npm run licenses:query -- licenses-by-holder-and-type tsc1holder... tsc.node
+npm run licenses:query -- admin-key tsc1admin...
+npm run licenses:query -- admin-keys
+npm run licenses:query -- admin-keys-by-license-type tsc.node issue
 ```
+
+## Lockup module
 
 ### Extend
 
 One or more `<fromDate> <toDate> <amount>` triples:
 
 ```bash
-npm run extend -- 2026-06-01T00:00:00Z 2027-06-01T00:00:00Z 500000000000000000
+npm run lockup:extend -- 2026-06-01T00:00:00Z 2027-06-01T00:00:00Z 500000000000000000
+```
+
+### Queries
+
+```bash
+npm run lockup:query -- active-locks
+npm run lockup:query -- total-locked-amount
+npm run lockup:query -- account-locks tsc1a...,tsc1b...
+npm run lockup:query -- locks tsc1holder...
+```
+
+## Distro module
+
+```bash
+npm run distro:mint -- 1000000000000000000
+```
+
+### Queries
+
+```bash
+npm run distro:query -- params
 ```
 
 ### Type-check
