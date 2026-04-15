@@ -1,6 +1,6 @@
 # tsc-signer
 
-CLI for signing and broadcasting `lockup` module transactions (`MsgLock`, `MsgExtend`) to a TSC / cosmos-evm chain. Uses `eth_secp256k1` (keccak256 + ECDSA) in `SIGN_MODE_DIRECT`.
+CLI for signing and broadcasting transactions to a TSC / cosmos-evm chain. Supports bank (`send`), staking (`delegate`, `unbond`, `redelegate`), `lockup` (`lock`, `extend`), `licenses` (create / update / issue / revoke / transfer / batch issue, plus admin keys), and `distro` (`mint`). Signs with `eth_secp256k1` (keccak256 + ECDSA) in `SIGN_MODE_DIRECT`.
 
 ## Prerequisites
 
