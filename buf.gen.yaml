@@ -1,0 +1,12 @@
+version: v2
+clean: true
+plugins:
+  - local: ./node_modules/.bin/protoc-gen-ts_proto
+    out: src/generated
+    opt:
+      - esModuleInterop=true
+      - forceLong=string
+      - useOptionals=messages
+      - outputServices=false
+      - env=node
+      - importSuffix=.js

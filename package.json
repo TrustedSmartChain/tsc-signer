@@ -1,0 +1,43 @@
+{
+  "name": "tsc-signer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "gen:proto": "buf generate",
+    "start": "tsx src/index.ts",
+    "lock": "tsx src/index.ts lock",
+    "extend": "tsx src/index.ts extend",
+    "send": "tsx src/index.ts send",
+    "delegate": "tsx src/index.ts delegate",
+    "unbond": "tsx src/index.ts unbond",
+    "redelegate": "tsx src/index.ts redelegate",
+    "create-license-type": "tsx src/index.ts create-license-type",
+    "update-license-type": "tsx src/index.ts update-license-type",
+    "set-admin-key": "tsx src/index.ts set-admin-key",
+    "remove-admin-key": "tsx src/index.ts remove-admin-key",
+    "issue-license": "tsx src/index.ts issue-license",
+    "revoke-license": "tsx src/index.ts revoke-license",
+    "update-license": "tsx src/index.ts update-license",
+    "transfer-license": "tsx src/index.ts transfer-license",
+    "batch-issue-license": "tsx src/index.ts batch-issue-license",
+    "mint": "tsx src/index.ts mint"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "^2.11.0",
+    "@cosmjs/stargate": "^0.38.1",
+    "@noble/hashes": "^1.4.0",
+    "@noble/secp256k1": "^2.1.0",
+    "bech32": "^2.0.0",
+    "cosmjs-types": "^0.9.0",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.0",
+    "ts-proto": "^2.11.6",
+    "tsx": "^4.16.0",
+    "typescript": "^5.5.0"
+  }
+}
